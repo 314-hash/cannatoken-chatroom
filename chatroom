@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>$CANNA — The Future of Cannabis Finance</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <style>
+    #animated-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at center, rgba(20,60,30,0.65), #04070c 70%);
+    }
+
+    .leaf {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #4dff9a, #0a3d24 70%);
+      clip-path: polygon(50% 0%, 65% 20%, 100% 40%, 70% 65%, 55% 100%, 45% 100%, 30% 65%, 0% 40%, 35% 20%);
+      filter: drop-shadow(0 0 20px rgba(47,255,156,0.6));
+      opacity: 0.75;
+    }
+
+    .pixel-glow {
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(47,255,156,0.15) 1px, transparent 1px),
+        radial-gradient(circle, rgba(245,199,122,0.12) 1px, transparent 1px);
+      background-size: 60px 60px, 90px 90px;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    :root {
+      --bg-main: #060a0f;
+      --bg-card: rgba(16, 22, 34, 0.85);
+      --accent-green: #2fff9c;
+      --accent-gold: #f5c77a;
+      --accent-neon: linear-gradient(135deg, #2fff9c, #7cf7ff, #c77dff);
+      --text-main: #e6f1ff;
+      --text-muted: #9fb3c8;
+      --border-glow: rgba(47, 255, 156, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #0c1220, #04070c 70%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 4rem 1.5rem 2rem;
+      position: relative;
+    }
+
+    #logo-img {
+      width: 140px;
+      height: 140px;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 0 25px rgba(47,255,156,0.35));
+    }
+
+    header h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .highlight {
+      background: var(--accent-neon);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle-location {
+      margin-top: 0.5rem;
+      color: var(--text-muted);
+      font-size: 1rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Decorative neon grid */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #app-container {
+      position: relative;
+      z-index: 1;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 1.5rem;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+      backdrop-filter: blur(14px);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      background: var(--accent-neon);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      margin-bottom: 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.35);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #7f8fa6;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 14px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--accent-neon);
+      color: #06140c;
+      box-shadow: 0 0 20px rgba(47,255,156,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 30px rgba(47,255,156,0.55);
+    }
+
+    .auth-buttons {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .auth-buttons button {
+      font-size: 0.8rem;
+      padding: 0.6rem 0.4rem;
+    }
+
+    #auth-status {
+      display: block;
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    #wallet-info {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: var(--text-muted);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      font-size: 0.8rem;
+      color: #6f8196;
+    }
+
+    footer span {
+      color: var(--accent-gold);
+    }
+  </style>
+  <!-- GSAP -->
+  <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://unpkg.com/gsap@3/dist/ScrollTrigger.min.js"></script>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div id="animated-bg">
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="leaf"></div>
+    <div class="pixel-glow"></div>
+  </div>
+
+  <div class="bg-grid"></div>
+
+  <header>
+    <img id="logo-img" src="/mnt/data/ChatGPT_Image_Dec_9__2025__04_09_19_PM-removebg-preview.png" alt="$CANNA Logo" />
+    <h1>The Future of <span class="highlight">Cannabis Finance</span></h1>
+    <p class="subtitle-location">$CANNA • Web3 • P2P • DeFi</p>
+  </header>
+
+  <div id="app-container">
+
+    <!-- Authentication -->
+    <div class="card" id="auth-section">
+      <h2>Authentication</h2>
+      <input type="text" id="auth-username" placeholder="Username" />
+      <input type="password" id="auth-password" placeholder="Password" />
+      <div class="auth-buttons">
+        <button id="signup-button">Sign Up</button>
+        <button id="login-button">Log In</button>
+        <button id="logout-button">Log Out</button>
+      </div>
+      <span id="auth-status">Not Logged In</span>
+    </div>
+
+    <!-- Wallet -->
+    <div class="card" id="wallet-section">
+      <h2>Wallet</h2>
+      <div id="wallet-info">
+        Wallet: <span id="wallet-address">Not Connected</span><br />
+        $CANNA Balance: <span id="CANNA-balance">0.00</span>
+      </div>
+      <button id="connect-wallet-button">Connect Wallet</button>
+      <br /><br />
+      <button id="buy-memepi-button">Buy $CANNA</button>
+    </div>
+
+  </div>
+
+  <footer>
+    © <span>$CANNA</span> Protocol — Transparency • Community • On‑Chain Cannabis Economy
+  </footer>
+
+  <script>
+    gsap.utils.toArray('.leaf').forEach((leaf, i) => {
+      gsap.set(leaf, {
+        x: Math.random() * window.innerWidth,
+        y: -150 - Math.random() * 400,
+        scale: 0.6 + Math.random() * 0.6,
+        rotation: Math.random() * 360
+      });
+
+      gsap.to(leaf, {
+        y: window.innerHeight + 200,
+        x: '+=200',
+        rotation: '+=360',
+        duration: 18 + Math.random() * 10,
+        repeat: -1,
+        ease: 'none',
+        delay: i * 2
+      });
+    });
+
+    gsap.to('.pixel-glow', {
+      backgroundPosition: '200px 200px, -200px -200px',
+      duration: 40,
+      repeat: -1,
+      ease: 'none'
+    });
+  </script>
+</body>
+</html>
